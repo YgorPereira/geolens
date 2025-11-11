@@ -13,18 +13,18 @@ export const prisma = new PrismaClient({
 });
 
 beforeAll(async () => {
-  await execAsync(`npx prisma db push --schema=${schemaPath} --force-reset --skip-generate`);
+  // await execAsync(`npx prisma db push --schema=${schemaPath} --force-reset --skip-generate`);
   await prisma.$connect();
 });
 
-afterEach(async () => {
-  const tablenames = await prisma.$queryRawUnsafe<{ name: string }[]>(`
-    SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';
-  `);
-  for (const { name } of tablenames) {
-    await prisma.$executeRawUnsafe(`DELETE FROM "${name}";`);
-  }
-});
+// afterEach(async () => {
+//   const tablenames = await prisma.$queryRawUnsafe<{ name: string }[]>(`
+//     SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';
+//   `);
+//   for (const { name } of tablenames) {
+//     await prisma.$executeRawUnsafe(`DELETE FROM "${name}";`);
+//   }
+// });
 
 afterAll(async () => {
   await prisma.$disconnect();
