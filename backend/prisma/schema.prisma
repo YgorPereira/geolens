@@ -10,14 +10,34 @@ generator client {
 }
 
 datasource db {
-  provider = sqlite
+  provider = postgresql
   url      = env("DATABASE_URL")
 }
 
 model City {
-  id Int @id @default(autoincrement())
-  name String
+  id         Int     @id @default(autoincrement())
+  name       String
   population Int
-  latitude Float
-  longitude Float
+  latitude   Float
+  longitude  Float
+  country_id Int
+  country    Country @relation(fields: [country_id], references: [id])
+}
+
+model Country {
+  id           Int       @id @default(autoincrement())
+  name         String
+  population   Int
+  language     String
+  coin         String
+  continent_id Int
+  continent    Continent @relation(fields: [continent_id], references: [id])
+  cities       City[]
+}
+
+model Continent {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  countries   Country[]
 }

@@ -1,12 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { City, type CityProps } from '../entities/city.js'
+import { City, type CityDTO } from '../entities/city.js'
 import type { BaseRepository } from "./base.js";
 
 
-export class CityRepository implements BaseRepository<CityProps, City> {
+export class CityRepository implements BaseRepository<CityDTO, City> {
     constructor(private readonly prisma = new PrismaClient()) { }
 
-    async save(data: CityProps): Promise<City> {
+    async save(data: CityDTO): Promise<City> {
         try {
             const new_city = await this.prisma.city.create({ data });
             return City.restore(new_city)
@@ -42,7 +42,7 @@ export class CityRepository implements BaseRepository<CityProps, City> {
         };
     };
 
-    async update(data: CityProps): Promise<City> {
+    async update(data: CityDTO): Promise<City> {
         try {
             const city = await this.prisma.city.update({
                 where: { id: data.id },

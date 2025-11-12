@@ -1,11 +1,11 @@
-export type ContinentProps = {
+export type ContinentDTO = {
     id?: number,
     name: string,
     description: string,
 }
 
 export class Continent {
-    private constructor(private props: ContinentProps) { };
+    private constructor(private props: ContinentDTO) { };
 
     public static create(name: string, description: string): Continent {
         if (!name) throw new Error('Continent name is required');
@@ -14,11 +14,11 @@ export class Continent {
         return new Continent({ name, description });
     };
 
-    get id(): number { return this.id };
-    get name(): string { return this.name };
-    get description(): string { return this.description };
+    get id(): number | undefined { return this.props.id };
+    get name(): string { return this.props.name };
+    get description(): string { return this.props.description };
 
-    toJson(): ContinentProps {
+    toJson(): ContinentDTO {
         return { ...this.props };
     };
 };
