@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "ts-node src/main.ts",
     "test": "vitest run",
+    "test:verbose": "vitest run --reporter=verbose",
     "test:watch": "vitest"
   },
   "keywords": [],

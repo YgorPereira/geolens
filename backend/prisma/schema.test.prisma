@@ -4,13 +4,33 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./test/test.db"
 }
 
 model City {
   id         Int     @id @default(autoincrement())
   name       String
   population Int
-  latitude Float
-  longitude Float
+  latitude   Float
+  longitude  Float
+  country_id Int
+  country    Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+}
+
+model Country {
+  id           Int       @id @default(autoincrement())
+  name         String
+  population   Int
+  language     String
+  coin         String
+  continent_id Int
+  continent    Continent @relation(fields: [continent_id], references: [id], onDelete: Cascade)
+  cities       City[]
+}
+
+model Continent {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  countries   Country[]
 }

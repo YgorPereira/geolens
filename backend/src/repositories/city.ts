@@ -18,9 +18,10 @@ export class CityRepository implements BaseRepository<CityDTO, City> {
 
     async findAll(): Promise<City[]> {
         try {
-            const cities = await this.prisma.city.findMany();
+            const cities = await this.prisma.city.findMany({
+                include: { country: true }
+            });
             return cities.map(city => City.restore(city));
-
         } catch (error) {
             console.error('Error fetching cities: ', error);
             throw error;
@@ -30,7 +31,8 @@ export class CityRepository implements BaseRepository<CityDTO, City> {
     async findById(id: number): Promise<City | null> {
         try {
             const city = await this.prisma.city.findUnique({
-                where: { id: id }
+                where: { id: id },
+                include: { country: true }
             });
 
             if (!city) return null;
@@ -46,11 +48,27 @@ export class CityRepository implements BaseRepository<CityDTO, City> {
         try {
             const city = await this.prisma.city.update({
                 where: { id: data.id },
-                data: data
+                data
             });
             return City.restore(city);
         } catch (error) {
-            console.error(`Error update city by ${id}: ${error}`);
+            console.error(`Error update city by ${data.id}: ${error}`);
+            throw error;
+        };
+    };
+
+    async patch(data: Partial<CityDTO>): Promise<City> {
+        try {
+            if (!data.id) {
+                throw new Error('ID is required for patching a city');
+            }
+            const city = await this.prisma.city.update({
+                where: { id: data.id },
+                data
+            });
+            return City.restore(city);
+        } catch (error) {
+            console.error(`Error patch city by ${data.id}: ${error}`);
             throw error;
         };
     };

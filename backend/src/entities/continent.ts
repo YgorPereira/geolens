@@ -1,5 +1,5 @@
 export type ContinentDTO = {
-    id?: number,
+    id?: number | undefined,
     name: string,
     description: string,
 }
@@ -12,6 +12,10 @@ export class Continent {
         if (!description) throw new Error('Continent description is required');
 
         return new Continent({ name, description });
+    };
+
+    public static restore(props: ContinentDTO): Continent {
+        return new Continent(props);
     };
 
     get id(): number | undefined { return this.props.id };
