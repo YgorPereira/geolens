@@ -22,7 +22,7 @@ export class Continent {
     get name(): string { return this.props.name };
     get description(): string { return this.props.description };
 
-    toJson(): ContinentDTO {
+    toJSON(): ContinentDTO {
         return { ...this.props };
     };
 };

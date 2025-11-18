@@ -38,7 +38,7 @@ export class Country {
     get continent_id(): number { return this.props.continent_id };
     get continent(): Continent | undefined { return this.props.continent };
 
-    toJson(): CountryDTO {
+    toJSON(): CountryDTO {
         return { ...this.props }
     };
 };

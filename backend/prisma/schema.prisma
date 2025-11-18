@@ -21,7 +21,7 @@ model City {
   latitude   Float
   longitude  Float
   country_id Int
-  country    Country @relation(fields: [country_id], references: [id])
+  country    Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
 }
 
 model Country {
@@ -31,7 +31,7 @@ model Country {
   language     String
   coin         String
   continent_id Int
-  continent    Continent @relation(fields: [continent_id], references: [id])
+  continent    Continent @relation(fields: [continent_id], references: [id], onDelete: Cascade)
   cities       City[]
 }
 
