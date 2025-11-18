@@ -2,4 +2,4 @@
 backend/prisma/memorydb
 *.env
 *.env.test
-backend/prisma/test.db
+backend/prisma/test/test.db

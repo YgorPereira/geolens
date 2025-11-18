@@ -41,7 +41,7 @@ describe('Continent Repository Test', async () => {
         expect(continent.description).toBe("Continente que abriga o Brasil");
     });
 
-    it('Should update a Continent record completely', async () => {
+    it('Should update a Continent record', async () => {
         const continent = await repo.save({
             name: "África",
             description: "Continente quente"
@@ -58,24 +58,6 @@ describe('Continent Repository Test', async () => {
         expect(updated.name).toBe("África Atualizada");
         expect(updated.description).toBe("Descrição atualizada");
     });
-
-    it('Should patch a Continent record partially', async () => {
-        const continent = await repo.save({
-            name: "Oceania",
-            description: "Continente das ilhas"
-        });
-
-        const patched = await repo.patch({
-            id: continent.id,
-            name: "Oceania Patch"
-        });
-
-        expect(patched).toBeInstanceOf(Continent);
-        expect(patched.id).toBe(continent.id);
-        expect(patched.name).toBe("Oceania Patch");
-        expect(patched.description).toBe("Continente das ilhas");
-    });
-
 
     it('Should delete a Continent record by id', async () => {
         const founded_continent: Continent | null = await repo.delete(createdContinent.id as number);

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Country, type CountryDTO } from "../entities/country.js";
 import type { BaseRepository } from "./base.js";
+import { count } from "node:console";
 
 export class CountryRepository implements BaseRepository<CountryDTO, Country> {
     constructor(private readonly prisma = new PrismaClient()) { };
@@ -41,6 +42,19 @@ export class CountryRepository implements BaseRepository<CountryDTO, Country> {
         };
     };
 
+    public async findByName(name: string): Promise<Country[]> {
+        try {
+            const countries = await this.prisma.country.findMany({
+                where: { name: name },
+                include: { continent: true }
+            });
+            return countries.map(country => Country.restore(country));
+        } catch (error) {
+            console.error(`Error fetching country by name ${name}: ${error}`);
+            throw error;
+        };
+    };
+
     public async update(data: CountryDTO): Promise<Country> {
         try {
             const country = await this.prisma.country.update({
@@ -50,22 +64,6 @@ export class CountryRepository implements BaseRepository<CountryDTO, Country> {
             return Country.restore(country);
         } catch (error) {
             console.error(`Error update country by ${data.id}: ${error}`);
-            throw error;
-        };
-    };
-
-    public async patch(data: Partial<CountryDTO>): Promise<Country> {
-        try {
-            if (!data.id) {
-                throw new Error('ID is required for patching a country');
-            }
-            const country = await this.prisma.country.update({
-                where: { id: data.id },
-                data: data
-            });
-            return Country.restore(country);
-        } catch (error) {
-            console.error(`Error patching country by ${data.id}: ${error}`);
             throw error;
         };
     };

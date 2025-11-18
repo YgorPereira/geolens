@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { type ContinentDTO, Continent} from "../entities/continent.js";
 import type { BaseRepository } from "./base.js";
 
@@ -38,6 +39,18 @@ export class ContinentRepository implements BaseRepository<ContinentDTO, Contine
         };
     };
 
+    async findByName(name: string): Promise<Continent[]> {
+        try {
+            const continents = await this.prisma.continent.findMany({
+                where: { name: name }
+            });
+            return continents.map(c => Continent.restore(c));
+        } catch (error) {
+            console.error(`Error fetching continent by name ${name}: ${error}`);
+            throw error;
+        };
+    };
+
     async update(data: ContinentDTO): Promise<Continent> {
         try {
             const continent = await this.prisma.continent.update({
@@ -47,22 +60,6 @@ export class ContinentRepository implements BaseRepository<ContinentDTO, Contine
             return Continent.restore(continent);
         } catch (error) {
             console.error(`Error update continent by ${data.id}: ${error}`);
-            throw error;
-        };
-    };
-
-    async patch(data: Partial<ContinentDTO>): Promise<Continent> {
-        try {
-            if (!data.id) {
-                throw new Error('ID is required for patching a continent');
-            }
-            const continent = await this.prisma.continent.update({
-                where: { id: data.id },
-                data: data
-            });
-            return Continent.restore(continent);
-        } catch (error) {
-            console.error(`Error patching continent by ${data.id}: ${error}`);
             throw error;
         };
     };

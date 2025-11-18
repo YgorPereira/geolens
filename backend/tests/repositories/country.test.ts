@@ -91,28 +91,6 @@ describe('Country Repository Test', () => {
         expect(updated.language).toBe("Espanhol Moderno");
         expect(updated.coin).toBe("Peso Novo");
     });
-
-    it('Should patch a Country partially', async () => {
-        const country = await repo.save({
-            name: "Peru",
-            population: 33000000,
-            language: "Espanhol",
-            coin: "Sol",
-            continent_id: created_continent.id
-        });
-
-        const patched = await repo.patch({
-            id: country.id,
-            population: 35000000
-        });
-
-        expect(patched.id).toBe(country.id);
-        expect(patched.population).toBe(35000000);
-
-        expect(patched.name).toBe("Peru");
-        expect(patched.language).toBe("Espanhol");
-        expect(patched.coin).toBe("Sol");
-    });
     
     it('Should delete a Country record by id', async () => {
         const founded_country: undefined = await repo.delete(created_country.id);
