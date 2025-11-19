@@ -1,0 +1,24 @@
+:root {
+  --blue-primary: #3B82F6;
+  --blue-primary-dark: #1E3A8A;
+  --blue-primary-light: #93C5FD;
+  --cyan-accent: #22D3EE;
+
+  --color-bg: #F9FAFB;
+  --color-bg-card: #F1F5F9;
+
+  --color-text: #0F172A;
+  --color-text-secondary: #475569;
+
+  --color-border: #E2E8F0;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0F172A;
+  --color-bg-card: #1E293B;
+
+  --color-text: #F1F5F9;
+  --color-text-secondary: #CBD5E1;
+
+  --color-border: #334155;
+}

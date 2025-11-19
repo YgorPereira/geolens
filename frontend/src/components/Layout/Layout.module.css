@@ -1,0 +1,27 @@
+.layout_container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.main_content {
+  margin-left: 260px;
+  padding: 24px;
+  background: var(--color-bg);
+  overflow-y: auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+  .main_content {
+    margin-left: 90px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .main_content {
+    margin-left: 80px;
+    padding: 12px;
+  }
+}
