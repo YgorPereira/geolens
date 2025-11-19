@@ -1,46 +1,46 @@
 import { Layout } from "../../components/Layout/Layout";
-import { ContinentsList } from "./ContinentsList";
-import { continents } from "./continents.types";
+import { CountriesList } from "./CountriesList";
+import { countries } from "./countries.types";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { useState, useMemo } from "react";
-import styles from "./ContinentsPage.module.css";
+import styles from "./CountriesPage.module.css";
 import { Button } from "../../components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
-export const ContinentsPage = () => {
+export const CountriesPage = () => {
     const itemsPerPage = 13;
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
 
-    const filteredContinents = useMemo(() => {
-        return continents.filter(continent =>
-            continent.name.toLowerCase().includes(search.toLowerCase())
+    const filteredCountries = useMemo(() => {
+        return countries.filter(country =>
+            country.name.toLowerCase().includes(search.toLowerCase())
         );
     }, [search]);
 
-    const totalItems = filteredContinents.length;
+    const totalItems = filteredCountries.length;
 
     const start = (currentPage - 1) * itemsPerPage;
-    const currentItems = filteredContinents.slice(start, start + itemsPerPage);
+    const currentItems = filteredCountries.slice(start, start + itemsPerPage);
 
     return (
         <Layout>
             <section className={styles.tableSection}>
                 <section className={styles.tableButtonsSection}>
-                    <span className={styles.table_title}>Continentes</span>
+                    <span className={styles.table_title}>Países</span>
 
                     <div className={styles.searchWrapper}>
                         <SearchBar
                             value={search}
                             onChange={setSearch}
-                            placeholder="Buscar continente..."
+                            placeholder="Buscar país..."
                         />
                     </div>
 
                     <div className={styles.buttons}>
-                        <Button>Novo Continente</Button>
+                        <Button>Novo País</Button>
                         <Button variant="card" icon={<FontAwesomeIcon icon={faFilter} />}>
                             Filtros
                         </Button>
@@ -48,7 +48,7 @@ export const ContinentsPage = () => {
                 </section>
 
                 <section className={styles.tableWrapper}>
-                    <ContinentsList data={currentItems} />
+                    <CountriesList data={currentItems} />
                 </section>
 
                 <div className={styles.paginationFixed}>

@@ -18,6 +18,11 @@
     font-weight: var(--font-semibold);
 }
 
+.searchWrapper {
+    flex: 1;
+    max-width: 350px;
+}
+
 .buttons {
     display: flex;
     align-items: center;
@@ -28,7 +33,7 @@
     flex: 1;
     overflow: auto;
     width: 100%;
-    padding-bottom: 1rem;
+    padding-bottom: 4.5rem;
     position: relative;
 }
 
@@ -41,4 +46,19 @@
     display: flex;
     justify-content: center;
     z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .tableButtonsSection {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .buttons {
+        justify-content: space-between;
+    }
+
+    .tableWrapper {
+        padding-bottom: 6rem;
+    }
 }
