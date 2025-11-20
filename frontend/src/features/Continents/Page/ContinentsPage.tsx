@@ -1,9 +1,8 @@
 import { Layout } from "../../../components/Layout/Layout";
 import { ContinentsList } from "../List/ContinentsList";
-import { continents } from "../continents.types";
 import { Pagination } from "../../../components/Pagination/Pagination";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import styles from "./ContinentsPage.module.css";
 
 import { Button } from "../../../components/Button/Button";
@@ -15,6 +14,7 @@ import { Modal } from "../../../components/Modal/Modal";
 import { ContinentForm } from "../Forms/ContinentsForm";
 
 import type { Continent } from "../continents.types";
+import { useContinents } from "../../../hooks/useContinents";
 
 export const ContinentsPage = () => {
     const itemsPerPage = 6;
@@ -27,11 +27,26 @@ export const ContinentsPage = () => {
 
     const [selected, setSelected] = useState<Continent | null>(null);
 
+    const {
+        continents,
+        // loading,
+        // error,
+        // fetchContinents
+    } = useContinents()
+
     const filteredContinents = useMemo(() => {
+        if (!continents) return;
+
         return continents.filter(continent =>
             continent.name.toLowerCase().includes(search.toLowerCase())
         );
-    }, [search]);
+    }, [search, continents]);
+
+    useEffect(() => {
+        if (!continents) return;
+
+        
+    }, [continents])
 
     const totalItems = filteredContinents.length;
     const start = (currentPage - 1) * itemsPerPage;

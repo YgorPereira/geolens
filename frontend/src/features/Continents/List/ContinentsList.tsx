@@ -1,3 +1,4 @@
+import { useContinents } from "../../../hooks/useContinents";
 import type { Continent } from "../continents.types";
 import styles from "./ContinentsList.module.css";
 

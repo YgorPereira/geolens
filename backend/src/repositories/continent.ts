@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { type ContinentDTO, Continent} from "../entities/continent.js";
+import { type ContinentDTO, Continent } from "../entities/continent.js";
 import type { BaseRepository } from "./base.js";
 
 export class ContinentRepository implements BaseRepository<ContinentDTO, Continent> {
@@ -17,8 +17,11 @@ export class ContinentRepository implements BaseRepository<ContinentDTO, Contine
 
     async findAll(): Promise<Continent[]> {
         try {
-            const continents = await this.prisma.continent.findMany();
-            return continents.map(continent => Continent.restore(continent));
+            const continents = await this.prisma.continent.findMany({
+                include: { countries: true }
+            });
+            return continents.map(continent => Continent.restore(continent
+            ));
         } catch (error) {
             console.error('Error fetching continents: ', error);
             throw error;
@@ -31,7 +34,7 @@ export class ContinentRepository implements BaseRepository<ContinentDTO, Contine
                 where: { id: id }
             });
             if (!continent) return null;
-            
+
             return Continent.restore(continent);
         } catch (error) {
             console.error(`Error fetching continent by id ${id}: ${error}`);

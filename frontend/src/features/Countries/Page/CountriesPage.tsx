@@ -1,6 +1,6 @@
 import { Layout } from "../../../components/Layout/Layout";
 import { CountriesList } from "../List/CountriesList";
-import { countries } from "../countries.types";
+// import { countries } from "../countries.types";
 import { Pagination } from "../../../components/Pagination/Pagination";
 import { useState, useMemo } from "react";
 import styles from "./CountriesPage.module.css";
@@ -10,6 +10,7 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { Modal } from "../../../components/Modal/Modal";
 import { CountryForm } from "../Forms/CountriesForm";
+import { useCountries } from "../../../hooks/useCountries";
 
 export const CountriesPage = () => {
     const itemsPerPage = 7;
@@ -26,9 +27,15 @@ export const CountriesPage = () => {
         { id: 3, name: "Europa" },
     ];
 
+    const {
+        countries,
+    } = useCountries()
+
     const filteredCountries = useMemo(() => {
+        if (!countries) return;
+
         return countries.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
-    }, [search]);
+    }, [search, countries]);
 
     const totalItems = filteredCountries.length;
     const start = (currentPage - 1) * itemsPerPage;

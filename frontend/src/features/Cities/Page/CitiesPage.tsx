@@ -1,6 +1,5 @@
 import { Layout } from "../../../components/Layout/Layout";
 import { CitiesList } from "../List/CitiesList";
-import { cities } from "../cities.types";
 import { Pagination } from "../../../components/Pagination/Pagination";
 import { useState, useMemo } from "react";
 import styles from "./CitiesPage.module.css";
@@ -12,6 +11,7 @@ import { Modal } from "../../../components/Modal/Modal";
 import { CityForm } from "../Forms/CitiesForm";
 
 import type { City } from "../cities.types";
+import { useCities } from "../../../hooks/useCities";
 
 export const CitiesPage = () => {
     const itemsPerPage = 8;
@@ -23,11 +23,17 @@ export const CitiesPage = () => {
     const [formMode, setFormMode] = useState<"create" | "view" | "edit">("view");
     const [selected, setSelected] = useState<City | null>(null);
 
+    const {
+        cities,
+    } = useCities();
+
     const filteredCities = useMemo(() => {
+        if (!cities) return;
+
         return cities.filter((city) =>
             city.name.toLowerCase().includes(search.toLowerCase())
         );
-    }, [search]);
+    }, [search, cities]);
 
     const totalItems = filteredCities.length;
     const start = (currentPage - 1) * itemsPerPage;
