@@ -6,6 +6,7 @@ import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
 import type { Continent } from "../../Continents/continents.types";
 import type { Country } from "../countries.types";
+import { getCountryInfo } from "../../../utils/restCountries";
 
 interface CountryFormProps {
     mode: "create" | "view" | "edit";
@@ -72,6 +73,22 @@ export const CountryForm = ({
         }
     }
 
+    async function handleBlurName() {
+        if (!name.trim()) return;
+
+        const info = await getCountryInfo(name);
+
+        if (info) {
+            setPopulation(info.population);
+            setLanguage(info.language);
+            setCoin(info.coin);
+        } else {
+            setPopulation(1);
+            setCoin("Não encontrado");
+            setCoin("Não encontrado");
+        }
+    }
+
     const countryToUpdate: Country = {
         id: defaultValues?.id,
         name,
@@ -89,6 +106,7 @@ export const CountryForm = ({
                 onChange={(value) => setName(value)}
                 disabled={disabled}
                 error={errors.name}
+                onBlur={handleBlurName}
             />
 
             <Input
@@ -119,7 +137,7 @@ export const CountryForm = ({
             <Select
                 label="Continente"
                 value={continentId}
-                onChange={(value, label) => {setContinentId(Number(value)); setContinentName(String(label))}}
+                onChange={(value, label) => { setContinentId(Number(value)); setContinentName(String(label)) }}
                 options={continents.map((c) => ({ value: c.id, label: c.name }))}
                 disabled={disabled}
                 error={errors.continent_id}

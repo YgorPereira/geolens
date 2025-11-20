@@ -8,6 +8,7 @@ interface InputProps {
     disabled?: boolean;
     type?: string;
     onChange?: (value: string) => void;
+    onBlur?: () => void;
 }
 
 export const Input = ({
@@ -18,6 +19,7 @@ export const Input = ({
     disabled,
     type = "text",
     onChange,
+    onBlur
 }: InputProps) => {
     return (
         <div className={styles.inputWrapper}>
@@ -33,6 +35,7 @@ export const Input = ({
                 value={value}
                 disabled={disabled}
                 onChange={(e) => onChange(e.target.value)}
+                onBlur={onBlur}
             />
 
             {error && <span className={styles.errorMessage}>{error}</span>}

@@ -6,6 +6,7 @@ import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
 import type { Country } from "../../Countries/countries.types";
 import type { City } from "../cities.types";
+import { getCityCoordinates } from "../../../utils/openMeteoGeocoding";
 
 interface CityFormProps {
     mode: "create" | "view" | "edit";
@@ -49,14 +50,6 @@ export const CityForm = ({
     const [longitude, setLongitude] = useState(defaultValues?.longitude || 0);
     const [countryId, setCountryId] = useState(defaultValues?.country_id || 0);
 
-    const cityToUpdate: City = {
-        name,
-        population,
-        latitude,
-        longitude,
-        country_id: countryId
-    }
-
     const disabled = mode === "view";
 
     const [errors, setErrors] = useState<{
@@ -67,60 +60,56 @@ export const CityForm = ({
         country_id?: string;
     }>({});
 
-    // function handleSubmit(e: React.FormEvent) {
-    //     e.preventDefault();
-    //     const err: any = {};
-    //     if (!name.trim()) err.name = "O nome é obrigatório.";
-    //     if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
-    //     if (!countryId) err.country_id = "O país é obrigatório.";
+    async function handleBlurCity() {
+        if (!name.trim()) return;
 
-    //     setErrors(err);
+        const info = await getCityCoordinates(name);
 
-    //     if (Object.keys(err).length === 0) {
-    //         onSubmit({
-    //             name,
-    //             population,
-    //             country_id: countryId,
-    //             latitude,
-    //             longitude
-    //         });
-    //     }
-    // }
-
-    function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const err: any = {};
-    if (!name.trim()) err.name = "O nome é obrigatório.";
-    if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
-    if (!countryId) err.country_id = "O país é obrigatório.";
-
-    setErrors(err);
-
-    if (Object.keys(err).length !== 0) return;
-
-    const payload: City = {
-        id: defaultValues?.id,
-        name,
-        population,
-        latitude,
-        longitude,
-        country_id: countryId,
-    };
-
-    if (mode === "edit" && onEditConfirm) {
-        onEditConfirm(payload);
-        return;
+        if (info) {
+            setPopulation(info.population)
+            setLatitude(info.latitude);
+            setLongitude(info.longitude);
+        } else {
+            setPopulation(0)
+            setLatitude(0);
+            setLongitude(0);
+        }
     }
 
-    onSubmit({
-        name,
-        population,
-        latitude,
-        longitude,
-        country_id: countryId,
-    });
-}
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        const err: any = {};
+        if (!name.trim()) err.name = "O nome é obrigatório.";
+        if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
+        if (!countryId) err.country_id = "O país é obrigatório.";
+
+        setErrors(err);
+
+        if (Object.keys(err).length !== 0) return;
+
+        const payload: City = {
+            id: defaultValues?.id,
+            name,
+            population,
+            latitude,
+            longitude,
+            country_id: countryId,
+        };
+
+        if (mode === "edit" && onEditConfirm) {
+            onEditConfirm(payload);
+            return;
+        }
+
+        onSubmit({
+            name,
+            population,
+            latitude,
+            longitude,
+            country_id: countryId,
+        });
+    }
 
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -131,6 +120,7 @@ export const CityForm = ({
                     onChange={(value) => setName(value)}
                     disabled={disabled}
                     error={errors.name}
+                    onBlur={handleBlurCity}
                 />
 
                 <Input

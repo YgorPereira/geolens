@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import type { City } from "../features/Cities/cities.types"
 import { createCity, listCities, updateCity, deleteCity } from "../features/Cities/cities.api"
 import { append, removeById, updateById } from "../utils/arrayHelper"
+import { getCurrentTemperature } from "../utils/openMeteo"
 
 export const useCities = () => {
     const [cities, setCities] = useState<City[]>([])
@@ -12,17 +13,27 @@ export const useCities = () => {
         setError(null);
         try {
             setLoading(true);
+
             const data = await listCities();
-            const normalized = data.map(c => ({
-                ...c,
-                country_name: c.country?.name || "",
-            }));
+
+            const normalized = await Promise.all(
+                data.map(async (c) => {
+                    const temp = await getCurrentTemperature(c.latitude, c.longitude);
+
+                    return {
+                        ...c,
+                        country_name: c.country?.name || "",
+                        weather: temp !== null ? `${temp}°` : "N/A"
+                    };
+                })
+            );
+
             setCities(normalized);
         } catch (error: any) {
-            setError(error.message || "Error fetching cities.")
+            setError(error.message || "Error fetching cities.");
         } finally {
             setLoading(false);
-            console.info("Success fetching cities.")
+            console.info("Success fetching cities.");
         }
     };
 
