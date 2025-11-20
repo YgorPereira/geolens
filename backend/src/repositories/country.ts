@@ -8,7 +8,14 @@ export class CountryRepository implements BaseRepository<CountryDTO, Country> {
 
     public async save(data: CountryDTO): Promise<Country> {
         try {
-            const country = await this.prisma.country.create({ data });
+            const country = await this.prisma.country.create({
+                data,
+                include: {
+                    cities: true,
+                    continent: true,
+                },
+            },);
+
             return Country.restore(country);
         } catch (error) {
             console.error('Error saving country: ', error);
@@ -19,7 +26,7 @@ export class CountryRepository implements BaseRepository<CountryDTO, Country> {
     public async findAll(): Promise<Country[]> {
         try {
             const countries = await this.prisma.country.findMany({
-                include: { continent: true }
+                include: { continent: true, cities: true }
             });
             return countries.map(country => Country.restore(country));
         } catch (error) {
@@ -59,7 +66,8 @@ export class CountryRepository implements BaseRepository<CountryDTO, Country> {
         try {
             const country = await this.prisma.country.update({
                 where: { id: data.id },
-                data: data
+                data: data,
+                include: { continent: true, cities: true }
             });
             return Country.restore(country);
         } catch (error) {

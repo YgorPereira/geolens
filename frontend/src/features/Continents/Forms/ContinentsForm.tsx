@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./ContinentsForm.module.css";
 
 import { Input } from "../../../components/Input/Input";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import { Button } from "../../../components/Button/Button";
+import type { Continent } from "../continents.types";
 
 interface ContinentFormProps {
   mode: "create" | "view" | "edit";
   defaultValues?: {
+    id?: number,
     name: string;
     description: string;
     count?: number;
@@ -15,6 +17,7 @@ interface ContinentFormProps {
   onSubmit: (data: { name: string; description: string }) => void;
   onCancel?: () => void;
   onStartEdit?: () => void;
+  onConfirmEdit?: (data: Continent) => void;
   onDelete?: (id: number) => void | Promise<void>;
 }
 
@@ -24,6 +27,7 @@ export const ContinentForm = ({
   onSubmit,
   onCancel,
   onStartEdit,
+  onConfirmEdit,
   onDelete
 }: ContinentFormProps) => {
   const [name, setName] = useState(defaultValues?.name || "");
@@ -45,16 +49,18 @@ export const ContinentForm = ({
     if (Object.keys(err).length === 0) onSubmit({ name, description });
   }
 
-  useEffect(() => {
-    console.log(defaultValues)
-  }, [defaultValues])
+  const continentToUpdate: Continent = {
+    id: defaultValues?.id,
+    name,
+    description,
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <Input
         label="Nome do Continente"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(value) => setName(value)}
         disabled={disabled}
         error={errors.name}
       />
@@ -79,7 +85,7 @@ export const ContinentForm = ({
             <Button type="button" variant="blue" onClick={onStartEdit}>
               Editar
             </Button>
-            <Button type="button" variant="red" onClick={() => onDelete(defaultValues.id)}>
+            <Button type="button" variant="red" onClick={() => onDelete?.(defaultValues?.id!)}>
               Excluir
             </Button>
           </>
@@ -98,7 +104,7 @@ export const ContinentForm = ({
 
         {mode === "edit" && (
           <>
-            <Button type="submit" variant="blue">
+            <Button type="button" variant="blue" onClick={() => onConfirmEdit?.(continentToUpdate)}>
               Atualizar
             </Button>
             <Button type="button" variant="card" onClick={onCancel}>

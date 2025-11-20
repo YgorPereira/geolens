@@ -12,6 +12,7 @@ import { Modal } from "../../../components/Modal/Modal";
 import { CountryForm } from "../Forms/CountriesForm";
 import { useCountries } from "../../../hooks/useCountries";
 import { useContinents } from "../../../hooks/useContinents";
+import type { Country } from "../countries.types";
 
 export const CountriesPage = () => {
     const itemsPerPage = 7;
@@ -24,7 +25,9 @@ export const CountriesPage = () => {
 
     const {
         countries,
-        removeCountry
+        removeCountry,
+        editCountry,
+        addCountry,
     } = useCountries()
 
     const { continents } = useContinents()
@@ -60,6 +63,7 @@ export const CountriesPage = () => {
         setSelected(null);
         setFormMode("view");
     }
+
 
     return (
         <Layout>
@@ -98,13 +102,17 @@ export const CountriesPage = () => {
                     mode={formMode}
                     defaultValues={selected}
                     continents={continents}
-                    onSubmit={(data) => {
-                        console.log("SUBMIT", formMode, data);
+                    onSubmit={async (data: Country) => {
+                        await addCountry(data)
                         closeModal();
                     }}
                     onDelete={async (id) => {
                         await removeCountry(id);
-                        closeModal()
+                        closeModal();
+                    }}
+                    onEditConfirm={async (data: Country) => {
+                        await editCountry(data);
+                        closeModal();
                     }}
                     onCancel={closeModal}
                     onStartEdit={handleEdit}

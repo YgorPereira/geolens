@@ -8,7 +8,7 @@ export class CityRepository implements BaseRepository<CityDTO, City> {
 
     async save(data: CityDTO): Promise<City> {
         try {
-            const new_city = await this.prisma.city.create({ data });
+            const new_city = await this.prisma.city.create({ data, include: { country: true } });
             return City.restore(new_city)
         } catch (error) {
             console.error('Error saving city: ', error);
@@ -62,7 +62,8 @@ export class CityRepository implements BaseRepository<CityDTO, City> {
         try {
             const city = await this.prisma.city.update({
                 where: { id: data.id },
-                data
+                data,
+                include: { country: true }
             });
             return City.restore(city);
         } catch (error) {

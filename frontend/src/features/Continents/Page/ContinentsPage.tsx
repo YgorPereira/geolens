@@ -29,7 +29,9 @@ export const ContinentsPage = () => {
 
     const {
         continents,
-        removeContinent
+        removeContinent,
+        editContinent,
+        addContinent
     } = useContinents()
 
     const filteredContinents = useMemo(() => {
@@ -39,12 +41,6 @@ export const ContinentsPage = () => {
             continent.name.toLowerCase().includes(search.toLowerCase())
         );
     }, [search, continents]);
-
-    useEffect(() => {
-        if (!continents) return;
-
-        
-    }, [continents])
 
     const totalItems = filteredContinents.length;
     const start = (currentPage - 1) * itemsPerPage;
@@ -125,13 +121,17 @@ export const ContinentsPage = () => {
                             }
                             : undefined
                     }
-                    onSubmit={(data) => {
-                        console.log("SUBMIT", formMode, data);
+                    onSubmit={async (data: Continent) => {
+                        await addContinent(data);
                         closeModal();
                     }}
                     onDelete={async (id) => {
                         await removeContinent(id);
                         closeModal()
+                    }}
+                    onConfirmEdit={async (data : Continent) => {
+                        await editContinent(data);
+                        closeModal();
                     }}
                     onCancel={closeModal}
                     onStartEdit={handleEdit}

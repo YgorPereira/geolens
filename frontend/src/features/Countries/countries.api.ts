@@ -9,7 +9,6 @@ export const createCountry = async (country: Country): Promise<Country> => {
 
 export const listCountries = async (): Promise<Country[]> => {
     const { data } = await api.get(COUNTRIES);
-    console.log(data)
     return data;
 };
 

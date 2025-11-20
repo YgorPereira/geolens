@@ -5,8 +5,8 @@ export interface Country {
     language: string,
     coin: string,
     continent_id?: number,
-    continent_name: string,
+    continent_name?: string,
     continent?: object,
-    city_quantity: number
+    city_quantity?: number
     cities?: []
 }

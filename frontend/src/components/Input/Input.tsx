@@ -6,7 +6,8 @@ interface InputProps {
     placeholder?: string;
     error?: string;
     disabled?: boolean;
-    onChange: (value: string) => void;
+    type?: string;
+    onChange?: (value: string) => void;
 }
 
 export const Input = ({
@@ -15,6 +16,7 @@ export const Input = ({
     placeholder,
     error,
     disabled,
+    type = "text",
     onChange,
 }: InputProps) => {
     return (
@@ -26,7 +28,7 @@ export const Input = ({
           ${error ? styles.error : ""}
           ${disabled ? styles.disabled : ""}
         `}
-                type="text"
+                type={type}
                 placeholder={placeholder}
                 value={value}
                 disabled={disabled}

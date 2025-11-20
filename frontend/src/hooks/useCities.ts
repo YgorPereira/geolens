@@ -13,7 +13,6 @@ export const useCities = () => {
         try {
             setLoading(true);
             const data = await listCities();
-            console.log(data)
             const normalized = data.map(c => ({
                 ...c,
                 country_name: c.country?.name || "",
@@ -31,8 +30,12 @@ export const useCities = () => {
         setError(null);
         try {
             const newOne = await createCity(city);
-            setCities(prev => append(prev, newOne));
-            return newOne;
+            const normalized = {
+                ...newOne,
+                country_name: newOne.country?.name || "",
+            }
+            setCities(prev => append(prev, normalized));
+            return normalized;
         } catch (error: any) {
             setError(error.message || "Error create new city")
         }
@@ -42,8 +45,12 @@ export const useCities = () => {
         setError(null);
         try {
             const updated = await updateCity(city);
-            setCities(prev => updateById(prev, updated));
-            return updated;
+            const normalized = {
+                ...updated,
+                country_name: updated.country?.name || "",
+            }
+            setCities(prev => updateById(prev, normalized));
+            return normalized;
         } catch (error: any) {
             setError(error.message || "Error update a city")
         }

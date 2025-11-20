@@ -26,7 +26,9 @@ export const CitiesPage = () => {
 
     const {
         cities,
-        removeCity
+        removeCity,
+        addCity,
+        editCity
     } = useCities();
 
     const {
@@ -124,8 +126,12 @@ export const CitiesPage = () => {
                             : undefined
                     }
                     countries={countries}
-                    onSubmit={(data) => {
-                        console.log("SUBMIT", formMode, data);
+                    onSubmit={async (data: City) => {
+                        await addCity(data)
+                        closeModal();
+                    }}
+                    onEditConfirm={async (city) => {
+                        await editCity(city);
                         closeModal();
                     }}
                     onCancel={closeModal}

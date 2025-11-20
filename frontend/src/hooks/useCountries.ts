@@ -13,7 +13,6 @@ export const useCountries = () => {
         try {
             setLoading(true);
             const data = await listCountries();
-            console.log(data)
             const normalized = data.map(c => ({
                 ...c,
                 city_quantity: c.cities ? c.cities.length : 0,
@@ -28,14 +27,22 @@ export const useCountries = () => {
         }
     };
 
-    const addContinent = async (country: Country) => {
+    const addCountry = async (country: Country) => {
         setError(null);
         try {
             const newOne = await createCountry(country);
-            setCountries(prev => append(prev, newOne));
-            return newOne;
+
+            const normalized = {
+                ...newOne,
+                city_quantity: newOne.cities ? newOne.cities.length : 0,
+                continent_name: newOne.continent?.name || "",
+            };
+
+            setCountries(prev => append(prev, normalized));
+            return normalized;
+
         } catch (error: any) {
-            setError(error.message || "Error create new country")
+            setError(error.message || "Error create new country");
         }
     };
 
@@ -43,7 +50,12 @@ export const useCountries = () => {
         setError(null);
         try {
             const updated = await updateCountry(country);
-            setCountries(prev => updateById(prev, updated));
+            const normalized = {
+                ...updated,
+                city_quantity: updated.cities ? updated.cities.length : 0,
+                continent_name: updated.continent?.name || "",
+            };
+            setCountries(prev => updateById(prev, normalized));
             return updated;
         } catch (error: any) {
             setError(error.message || "Error update a country")
@@ -71,8 +83,8 @@ export const useCountries = () => {
         loading,
         error,
         fetchCountries,
-        addContinent,
-        editContinent: editCountry,
+        addCountry,
+        editCountry,
         removeCountry,
     };
 } 

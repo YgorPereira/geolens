@@ -1,3 +1,4 @@
+import type { City } from "./city.js";
 import { Continent } from "./continent.js";
 
 export type CountryDTO = {
@@ -8,6 +9,7 @@ export type CountryDTO = {
     coin: string,
     continent_id: number,
     continent?: Continent
+    cities?: City[];
 };
 
 export class Country {
@@ -37,6 +39,10 @@ export class Country {
     get coin(): string { return this.props.coin };
     get continent_id(): number { return this.props.continent_id };
     get continent(): Continent | undefined { return this.props.continent };
+    get cities() {
+        return this.props.cities;
+    };
+
 
     toJSON(): CountryDTO {
         return { ...this.props }

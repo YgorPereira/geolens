@@ -5,6 +5,7 @@ import { Input } from "../../../components/Input/Input";
 import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
 import type { Continent } from "../../Continents/continents.types";
+import type { Country } from "../countries.types";
 
 interface CountryFormProps {
     mode: "create" | "view" | "edit";
@@ -14,8 +15,6 @@ interface CountryFormProps {
         population: number;
         language: string;
         coin: string;
-        continent_id: number;
-        continent_name?: string;
     };
     continents?: Continent[];
     onSubmit: (data: {
@@ -27,6 +26,7 @@ interface CountryFormProps {
     }) => void;
     onCancel?: () => void;
     onStartEdit?: () => void;
+    onEditConfirm: (data: Country) => void;
     onDelete?: (id: number) => void | Promise<void>;
 }
 
@@ -37,6 +37,7 @@ export const CountryForm = ({
     onSubmit,
     onCancel,
     onStartEdit,
+    onEditConfirm,
     onDelete,
 }: CountryFormProps) => {
     const [name, setName] = useState(defaultValues?.name || "");
@@ -44,6 +45,7 @@ export const CountryForm = ({
     const [language, setLanguage] = useState(defaultValues?.language || "");
     const [coin, setCoin] = useState(defaultValues?.coin || "");
     const [continentId, setContinentId] = useState(defaultValues?.continent_id || 0);
+    const [continentName, setContinentName] = useState(defaultValues?.continent_name || 'nenhum')
 
     const disabled = mode === "view";
 
@@ -63,7 +65,6 @@ export const CountryForm = ({
         if (!language.trim()) err.language = "O idioma é obrigatório.";
         if (!coin.trim()) err.coin = "A moeda é obrigatória.";
         if (!continentId) err.continent_id = "O continente é obrigatório.";
-
         setErrors(err);
 
         if (Object.keys(err).length === 0) {
@@ -71,12 +72,21 @@ export const CountryForm = ({
         }
     }
 
+    const countryToUpdate: Country = {
+        id: defaultValues?.id,
+        name,
+        population,
+        language,
+        coin,
+        continent_id: continentId
+    };
+
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Input
                 label="Nome do País"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(value) => setName(value)}
                 disabled={disabled}
                 error={errors.name}
             />
@@ -84,15 +94,16 @@ export const CountryForm = ({
             <Input
                 label="População"
                 value={String(population)}
-                onChange={(e) => setPopulation(Number(e.target.value))}
+                onChange={(value) => setPopulation(Number(value))}
                 disabled={disabled}
                 error={errors.population}
+                type="number"
             />
 
             <Input
                 label="Idioma"
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(value) => setLanguage(value)}
                 disabled={disabled}
                 error={errors.language}
             />
@@ -100,7 +111,7 @@ export const CountryForm = ({
             <Input
                 label="Moeda"
                 value={coin}
-                onChange={(e) => setCoin(e.target.value)}
+                onChange={(value) => setCoin(value)}
                 disabled={disabled}
                 error={errors.coin}
             />
@@ -108,7 +119,7 @@ export const CountryForm = ({
             <Select
                 label="Continente"
                 value={continentId}
-                onChange={(value) => setContinentId(Number(value))}
+                onChange={(value, label) => {setContinentId(Number(value)); setContinentName(String(label))}}
                 options={continents.map((c) => ({ value: c.id, label: c.name }))}
                 disabled={disabled}
                 error={errors.continent_id}
@@ -150,7 +161,7 @@ export const CountryForm = ({
 
                 {mode === "edit" && (
                     <>
-                        <Button type="submit" variant="blue">
+                        <Button type="submit" variant="blue" onClick={() => onEditConfirm(countryToUpdate)}>
                             Atualizar
                         </Button>
                         {onCancel && (

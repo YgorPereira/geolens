@@ -5,6 +5,7 @@ import { Input } from "../../../components/Input/Input";
 import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
 import type { Country } from "../../Countries/countries.types";
+import type { City } from "../cities.types";
 
 interface CityFormProps {
     mode: "create" | "view" | "edit";
@@ -22,12 +23,13 @@ interface CityFormProps {
     onSubmit: (data: {
         name: string;
         population: number;
-        latitude?: number;
-        longitude?: number;
+        latitude: number;
+        longitude: number;
         country_id: number;
     }) => void;
     onCancel?: () => void;
     onStartEdit?: () => void;
+    onEditConfirm?: (data: City) => void;
     onDelete?: () => void;
 }
 
@@ -38,6 +40,7 @@ export const CityForm = ({
     onSubmit,
     onCancel,
     onStartEdit,
+    onEditConfirm,
     onDelete,
 }: CityFormProps) => {
     const [name, setName] = useState(defaultValues?.name || "");
@@ -45,6 +48,14 @@ export const CityForm = ({
     const [latitude, setLatitude] = useState(defaultValues?.latitude || 0);
     const [longitude, setLongitude] = useState(defaultValues?.longitude || 0);
     const [countryId, setCountryId] = useState(defaultValues?.country_id || 0);
+
+    const cityToUpdate: City = {
+        name,
+        population,
+        latitude,
+        longitude,
+        country_id: countryId
+    }
 
     const disabled = mode === "view";
 
@@ -56,25 +67,60 @@ export const CityForm = ({
         country_id?: string;
     }>({});
 
+    // function handleSubmit(e: React.FormEvent) {
+    //     e.preventDefault();
+    //     const err: any = {};
+    //     if (!name.trim()) err.name = "O nome é obrigatório.";
+    //     if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
+    //     if (!countryId) err.country_id = "O país é obrigatório.";
+
+    //     setErrors(err);
+
+    //     if (Object.keys(err).length === 0) {
+    //         onSubmit({
+    //             name,
+    //             population,
+    //             country_id: countryId,
+    //             latitude,
+    //             longitude
+    //         });
+    //     }
+    // }
+
     function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        const err: any = {};
-        if (!name.trim()) err.name = "O nome é obrigatório.";
-        if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
-        if (!countryId) err.country_id = "O país é obrigatório.";
+    e.preventDefault();
 
-        setErrors(err);
+    const err: any = {};
+    if (!name.trim()) err.name = "O nome é obrigatório.";
+    if (!population || population <= 0) err.population = "A população deve ser maior que zero.";
+    if (!countryId) err.country_id = "O país é obrigatório.";
 
-        if (Object.keys(err).length === 0) {
-            onSubmit({
-                name,
-                population,
-                country_id: countryId,
-                latitude: mode !== "view" ? undefined : latitude,
-                longitude: mode !== "view" ? undefined : longitude,
-            });
-        }
+    setErrors(err);
+
+    if (Object.keys(err).length !== 0) return;
+
+    const payload: City = {
+        id: defaultValues?.id,
+        name,
+        population,
+        latitude,
+        longitude,
+        country_id: countryId,
+    };
+
+    if (mode === "edit" && onEditConfirm) {
+        onEditConfirm(payload);
+        return;
     }
+
+    onSubmit({
+        name,
+        population,
+        latitude,
+        longitude,
+        country_id: countryId,
+    });
+}
 
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -82,15 +128,16 @@ export const CityForm = ({
                 <Input
                     label="Nome da Cidade"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(value) => setName(value)}
                     disabled={disabled}
                     error={errors.name}
                 />
 
                 <Input
                     label="População"
+                    type="number"
                     value={String(population)}
-                    onChange={(e) => setPopulation(Number(e.target.value))}
+                    onChange={(value) => setPopulation(Number(value))}
                     disabled={disabled}
                     error={errors.population}
                 />
@@ -104,13 +151,22 @@ export const CityForm = ({
                     error={errors.country_id}
                 />
 
-                {mode === "view" && (
-                    <>
-                        <Input label="Latitude" value={String(latitude)} disabled />
-                        <Input label="Longitude" value={String(longitude)} disabled />
-                        <Input label="Clima" value={defaultValues?.weather || "—"} disabled />
-                    </>
-                )}
+                <Input
+                    label="Latitude"
+                    type="number"
+                    value={String(latitude)}
+                    disabled={disabled}
+                    onChange={(value) => setLatitude(Number(value))}
+                />
+
+                <Input
+                    label="Longitude"
+                    type="number"
+                    value={String(longitude)}
+                    disabled={disabled}
+                    onChange={(value) => setLongitude(Number(value))}
+                />
+                <Input label="Clima" value={defaultValues?.weather || "—"} disabled />
             </div>
 
             <div className={styles.actions}>
