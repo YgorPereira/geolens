@@ -9,7 +9,8 @@ export const continents: Continent[] = [
   {
     id: 1,
     name: "África",
-    description: "Segundo maior continente, com rica diversidade cultural e climática."
+    description: "Segundo maior continente, com rica diversidade cultural e climática.",
+    count_paises: 11
   },
   {
     id: 2,

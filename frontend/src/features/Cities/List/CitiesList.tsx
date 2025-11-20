@@ -1,11 +1,12 @@
-import type { City } from "./cities.types";
+import type { City } from "../cities.types";
 import styles from "./CitiesList.module.css";
 
 type CityTableProps = {
     data: City[];
+    onRowClick?: (city: City) => void;
 };
 
-export const CitiesList = ({ data }: CityTableProps) => {
+export const CitiesList = ({ data, onRowClick }: CityTableProps) => {
     return (
         <div className={styles.wrapper}>
             <table className={styles.table}>
@@ -21,14 +22,14 @@ export const CitiesList = ({ data }: CityTableProps) => {
                 </thead>
 
                 <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.name}</td>
-                            <td className={styles.center}>{item.population}</td>
-                            <td className={styles.center}>{item.latitude}</td>
-                            <td className={styles.center}>{item.longitude}</td>
-                            <td>{item.country_name ?? "—"}</td>
-                            <td className={styles.center}>{item.weather ?? "—"}</td>
+                    {data.map((city) => (
+                        <tr key={city.id} onClick={() => onRowClick?.(city)} className={styles.row}>
+                            <td>{city.name}</td>
+                            <td className={styles.center}>{city.population}</td>
+                            <td className={styles.center}>{city.latitude}</td>
+                            <td className={styles.center}>{city.longitude}</td>
+                            <td>{city.country_name ?? "—"}</td>
+                            <td className={styles.center}>{city.weather ?? "—"}</td>
                         </tr>
                     ))}
                 </tbody>

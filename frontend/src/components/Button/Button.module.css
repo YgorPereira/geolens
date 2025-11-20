@@ -40,6 +40,11 @@
   width: 100%;
 }
 
+.variant_red {
+  background-color: red;
+  color: white;
+}
+
 .variant_blue {
   background-color: var(--blue-primary);
   color: white;

@@ -31,8 +31,10 @@
   white-space: nowrap;
 }
 
-.colName {
-  width: 20%;
+.colCoin, 
+.colContinent
+{
+width: 20%;
 }
 
 .colPopulation {
@@ -40,20 +42,13 @@
   text-align: center !important;
 }
 
-.colLanguage {
-  width: 15%;
-}
 
-.colCoin {
+.colName, .colLanguage {
   width: 15%;
-}
-
-.colContinent {
-  width: 20%;
 }
 
 .colCityQuantity {
-  width: 15%;
+  width: 10%;
   text-align: center !important;
 }
 
@@ -63,6 +58,7 @@
 
 .table tbody tr {
   transition: background-color 0.25s ease;
+  vertical-align: middle;
 }
 
 .table tbody tr:nth-child(even) {
@@ -72,15 +68,17 @@
 .table td {
   padding: 0.85rem 1rem;
   color: var(--color-text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover{
   background-color: var(--blue-primary-light);
-  color: var(--color-text);
-  cursor: pointer;
 }
+
+.table tbody tr:hover td{
+  color: var(--blue-primary-dark);
+}
+
 
 @media (max-width: 1024px) {
   .table {

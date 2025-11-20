@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 type ButtonProps = {
   children: React.ReactNode;
   icon?: React.ReactNode;
-  variant?: "blue" | "blueLight" | "card" | "cardDark";
+  variant?: "blue" | "blueLight" | "card" | "cardDark" | "red";
   disabled?: boolean;
   fullWidth?: boolean;
   type?: "button" | "submit";

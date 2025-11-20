@@ -31,21 +31,16 @@
   white-space: nowrap;
 }
 
-.colName {
-  width: 25%;
+.colName, .colDescription, .colCount{
+  width: 33%;
 }
-
-.colDescription {
-  width: 55%;
-}
-
 .colCount {
-  width: 20%;
   text-align: center !important; 
 }
 
 .table tbody tr {
   transition: background-color 0.25s ease;
+  vertical-align: middle;
 }
 
 .table tbody tr:nth-child(even) {
@@ -55,9 +50,13 @@
 .table td {
   padding: 0.85rem 1rem;
   color: var(--color-text-secondary);
+  vertical-align: middle;
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover{
   background-color: var(--blue-primary-light);
-  color: var(--color-text);
+}
+
+.table tbody tr:hover td{
+  color: var(--blue-primary-dark);
 }

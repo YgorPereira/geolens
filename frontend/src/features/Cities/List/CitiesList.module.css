@@ -35,27 +35,19 @@
   width: 22%;
 }
 
-.colPopulation {
-  width: 12%;
-  text-align: center !important;
-}
-
+.colPopulation,
+.colLon,
 .colLat {
   width: 12%;
   text-align: center !important;
 }
 
-.colLon {
-  width: 12%;
-  text-align: center !important;
-}
-
 .colCountry {
-  width: 22%;
+  width: 20%;
 }
 
 .colWeather {
-  width: 20%;
+  width: 30%;
   text-align: center !important;
 }
 
@@ -76,12 +68,15 @@
   color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover{
   background-color: var(--blue-primary-light);
-  color: var(--color-text);
-  cursor: pointer;
+}
+
+.table tbody tr:hover td{
+  color: var(--blue-primary-dark);
 }
 
 @media (max-width: 1024px) {

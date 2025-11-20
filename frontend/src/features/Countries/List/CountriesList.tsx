@@ -1,11 +1,12 @@
-import type { Country } from "./countries.types";
+import type { Country } from "../countries.types";
 import styles from "./CountriesList.module.css";
 
 type CountryTableProps = {
     data: Country[];
+    onRowClick?: (item: Country) => void;
 };
 
-export const CountriesList = ({ data }: CountryTableProps) => {
+export const CountriesList = ({ data, onRowClick }: CountryTableProps) => {
     return (
         <div className={styles.wrapper}>
             <table className={styles.table}>
@@ -22,7 +23,11 @@ export const CountriesList = ({ data }: CountryTableProps) => {
 
                 <tbody>
                     {data.map((item) => (
-                        <tr key={item.id}>
+                        <tr
+                            key={item.id}
+                            onClick={() => onRowClick && onRowClick(item)}
+                            style={{ cursor: onRowClick ? "pointer" : "default" }}
+                        >
                             <td>{item.name}</td>
                             <td className={styles.center}>{item.population}</td>
                             <td>{item.language}</td>

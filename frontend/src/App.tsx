@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { Home } from './pages/Home/Home'
-import { ContinentsPage } from './features/Continents/ContinentsPage'
-import { CountriesPage } from './features/Countries/CountriesPage'
-import { CitiesPage } from './features/Cities/CitiesPage'
+import { ContinentsPage } from './features/Continents/Page/ContinentsPage'
+import { CountriesPage } from './features/Countries/Page/CountriesPage'
+import { CitiesPage } from './features/Cities/Page/CitiesPage'
 
 function App() {
 
