@@ -69,9 +69,9 @@ export const useCities = () => {
         cities: cities,
         loading,
         error,
-        fetchCountries: fetchCities,
-        addContinent: addCity,
-        editContinent: editCity,
-        removeCountry: removeCity,
+        fetchCities: fetchCities,
+        addCity: addCity,
+        editCity: editCity,
+        removeCity: removeCity,
     };
 } 

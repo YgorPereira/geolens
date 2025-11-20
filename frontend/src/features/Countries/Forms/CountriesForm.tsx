@@ -4,6 +4,7 @@ import styles from "./CountriesForm.module.css";
 import { Input } from "../../../components/Input/Input";
 import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
+import type { Continent } from "../../Continents/continents.types";
 
 interface CountryFormProps {
     mode: "create" | "view" | "edit";
@@ -16,7 +17,7 @@ interface CountryFormProps {
         continent_id: number;
         continent_name?: string;
     };
-    continents?: { id: number; name: string }[];
+    continents?: Continent[];
     onSubmit: (data: {
         name: string;
         population: number;
@@ -26,7 +27,7 @@ interface CountryFormProps {
     }) => void;
     onCancel?: () => void;
     onStartEdit?: () => void;
-    onDelete?: () => void;
+    onDelete?: (id: number) => void | Promise<void>;
 }
 
 export const CountryForm = ({
@@ -122,7 +123,7 @@ export const CountryForm = ({
                             </Button>
                         )}
                         {onDelete && (
-                            <Button type="button" variant="card" onClick={onDelete}>
+                            <Button type="button" variant="card" onClick={() => onDelete(defaultValues?.id)}>
                                 Excluir
                             </Button>
                         )}

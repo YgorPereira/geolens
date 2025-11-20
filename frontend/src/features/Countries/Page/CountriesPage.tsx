@@ -11,6 +11,7 @@ import SearchBar from "../../../components/SearchBar/SearchBar";
 import { Modal } from "../../../components/Modal/Modal";
 import { CountryForm } from "../Forms/CountriesForm";
 import { useCountries } from "../../../hooks/useCountries";
+import { useContinents } from "../../../hooks/useContinents";
 
 export const CountriesPage = () => {
     const itemsPerPage = 7;
@@ -21,15 +22,12 @@ export const CountriesPage = () => {
     const [formMode, setFormMode] = useState<"create" | "view" | "edit">("view");
     const [selected, setSelected] = useState<any>(null);
 
-    const continentsOptions = [
-        { id: 1, name: "América do Sul" },
-        { id: 2, name: "África" },
-        { id: 3, name: "Europa" },
-    ];
-
     const {
         countries,
+        removeCountry
     } = useCountries()
+
+    const { continents } = useContinents()
 
     const filteredCountries = useMemo(() => {
         if (!countries) return;
@@ -82,7 +80,7 @@ export const CountriesPage = () => {
                 </section>
 
                 <section className={styles.tableWrapper}>
-                    <CountriesList data={currentItems} onRowClick={openView}/>
+                    <CountriesList data={currentItems} onRowClick={openView} />
                 </section>
 
                 <div className={styles.paginationFixed}>
@@ -99,10 +97,14 @@ export const CountriesPage = () => {
                 <CountryForm
                     mode={formMode}
                     defaultValues={selected}
-                    continentsOptions={continentsOptions}
+                    continents={continents}
                     onSubmit={(data) => {
                         console.log("SUBMIT", formMode, data);
                         closeModal();
+                    }}
+                    onDelete={async (id) => {
+                        await removeCountry(id);
+                        closeModal()
                     }}
                     onCancel={closeModal}
                     onStartEdit={handleEdit}

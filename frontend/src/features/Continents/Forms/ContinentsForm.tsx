@@ -15,7 +15,7 @@ interface ContinentFormProps {
   onSubmit: (data: { name: string; description: string }) => void;
   onCancel?: () => void;
   onStartEdit?: () => void;
-  onDelete?: () => void;
+  onDelete?: (id: number) => void | Promise<void>;
 }
 
 export const ContinentForm = ({
@@ -79,7 +79,7 @@ export const ContinentForm = ({
             <Button type="button" variant="blue" onClick={onStartEdit}>
               Editar
             </Button>
-            <Button type="button" variant="red" onClick={onDelete}>
+            <Button type="button" variant="red" onClick={() => onDelete(defaultValues.id)}>
               Excluir
             </Button>
           </>

@@ -4,6 +4,7 @@ import styles from "./CitiesForm.module.css";
 import { Input } from "../../../components/Input/Input";
 import { Select } from "../../../components/Select/Select";
 import { Button } from "../../../components/Button/Button";
+import type { Country } from "../../Countries/countries.types";
 
 interface CityFormProps {
     mode: "create" | "view" | "edit";
@@ -17,7 +18,7 @@ interface CityFormProps {
         country_name?: string;
         weather?: string;
     };
-    countries?: { id: number; name: string }[];
+    countries?: Country[]
     onSubmit: (data: {
         name: string;
         population: number;
@@ -121,7 +122,7 @@ export const CityForm = ({
                             </Button>
                         )}
                         {onDelete && (
-                            <Button type="button" variant="card" onClick={onDelete}>
+                            <Button type="button" variant="card" onClick={() => onDelete(defaultValues.id)}>
                                 Excluir
                             </Button>
                         )}

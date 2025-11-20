@@ -29,9 +29,7 @@ export const ContinentsPage = () => {
 
     const {
         continents,
-        // loading,
-        // error,
-        // fetchContinents
+        removeContinent
     } = useContinents()
 
     const filteredContinents = useMemo(() => {
@@ -120,6 +118,7 @@ export const ContinentsPage = () => {
                     defaultValues={
                         selected
                             ? {
+                                id: selected.id,
                                 name: selected.name,
                                 description: selected.description,
                                 count: selected.count_paises
@@ -129,6 +128,10 @@ export const ContinentsPage = () => {
                     onSubmit={(data) => {
                         console.log("SUBMIT", formMode, data);
                         closeModal();
+                    }}
+                    onDelete={async (id) => {
+                        await removeContinent(id);
+                        closeModal()
                     }}
                     onCancel={closeModal}
                     onStartEdit={handleEdit}

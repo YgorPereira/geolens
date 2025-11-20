@@ -12,6 +12,7 @@ import { CityForm } from "../Forms/CitiesForm";
 
 import type { City } from "../cities.types";
 import { useCities } from "../../../hooks/useCities";
+import { useCountries } from "../../../hooks/useCountries";
 
 export const CitiesPage = () => {
     const itemsPerPage = 8;
@@ -25,7 +26,12 @@ export const CitiesPage = () => {
 
     const {
         cities,
+        removeCity
     } = useCities();
+
+    const {
+        countries,
+    } = useCountries();
 
     const filteredCities = useMemo(() => {
         if (!cities) return;
@@ -117,12 +123,13 @@ export const CitiesPage = () => {
                             }
                             : undefined
                     }
-                    countries={cities.map((c) => ({ id: c.country_id || 0, name: c.country_name || "" }))}
+                    countries={countries}
                     onSubmit={(data) => {
                         console.log("SUBMIT", formMode, data);
                         closeModal();
                     }}
                     onCancel={closeModal}
+                    onDelete={removeCity}
                     onStartEdit={handleEdit}
                 />
             </Modal>

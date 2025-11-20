@@ -17,6 +17,7 @@ export const useContinents = () => {
                 ...c,
                 count_paises: c.countries ? c.countries.length : 0,
             }));
+            console.log(normalized)
             setContinents(normalized);
         } catch (error: any) {
             setError(error.message || "Error fetching continents.")
