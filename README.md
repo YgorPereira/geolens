@@ -124,4 +124,4 @@ Frontend disponível em <http://localhost:5173> (Vite).
 
 ## Autor
 
-Desenvolvido por **Ygor Ruan Pereira** - [LinkedIn](www.linkedin.com/in/ygorrpereira) | [GitHub](https://github.com/YgorPereira)
+Desenvolvido por **Ygor Ruan Pereira** - [LinkedIn](https://www.linkedin.com/in/ygorrpereira) | [GitHub](https://github.com/YgorPereira)
