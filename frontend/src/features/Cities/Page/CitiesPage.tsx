@@ -1,47 +1,52 @@
+import { useMemo, useState } from "react";
 import { Layout } from "../../../components/Layout/Layout";
 import { CitiesList } from "../List/CitiesList";
 import { Pagination } from "../../../components/Pagination/Pagination";
-import { useState, useMemo } from "react";
-import styles from "./CitiesPage.module.css";
 import { Button } from "../../../components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faFilter } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { Modal } from "../../../components/Modal/Modal";
 import { CityForm } from "../Forms/CitiesForm";
 
-import type { City } from "../cities.types";
 import { useCities } from "../../../hooks/useCities";
 import { useCountries } from "../../../hooks/useCountries";
 
-export const CitiesPage = () => {
-    const itemsPerPage = 8;
+import styles from "./CitiesPage.module.css";
+import { Select } from "../../../components/Select/Select";
 
+export const CitiesPage = () => {
+    const { cities, addCity, editCity, removeCity } = useCities();
+    const { countries } = useCountries();
+
+    const itemsPerPage = 7;
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
 
+    const [filtersOpen, setFiltersOpen] = useState(false);
+    const [filterCountryId, setFilterCountryId] = useState<number | null>(null);
+
     const [modalOpen, setModalOpen] = useState(false);
-    const [formMode, setFormMode] = useState<"create" | "view" | "edit">("view");
-    const [selected, setSelected] = useState<City | null>(null);
-
-    const {
-        cities,
-        removeCity,
-        addCity,
-        editCity
-    } = useCities();
-
-    const {
-        countries,
-    } = useCountries();
+    const [mode, setMode] = useState<"create" | "view" | "edit">("view");
+    const [selected, setSelected] = useState<any>(null);
 
     const filteredCities = useMemo(() => {
-        if (!cities) return;
+        let result = cities;
 
-        return cities.filter((city) =>
-            city.name.toLowerCase().includes(search.toLowerCase())
-        );
-    }, [search, cities]);
+        if (!result) return [];
+
+        if (search.trim()) {
+            result = result.filter(c =>
+                c.name.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+
+        if (filterCountryId) {
+            result = result.filter(c => c.country_id === filterCountryId);
+        }
+
+        return result;
+    }, [cities, search, filterCountryId]);
 
     const totalItems = filteredCities.length;
     const start = (currentPage - 1) * itemsPerPage;
@@ -49,24 +54,20 @@ export const CitiesPage = () => {
 
     function openCreate() {
         setSelected(null);
-        setFormMode("create");
+        setMode("create");
         setModalOpen(true);
     }
 
-    function openView(city: City) {
+    function openView(city: any) {
         setSelected(city);
-        setFormMode("view");
+        setMode("view");
         setModalOpen(true);
-    }
-
-    function handleEdit() {
-        setFormMode("edit");
     }
 
     function closeModal() {
         setModalOpen(false);
         setSelected(null);
-        setFormMode("view");
+        setMode("view");
     }
 
     return (
@@ -75,27 +76,47 @@ export const CitiesPage = () => {
                 <section className={styles.tableButtonsSection}>
                     <span className={styles.table_title}>Cidades</span>
 
-                    <div className={styles.searchWrapper}>
-                        <SearchBar
-                            value={search}
-                            onChange={setSearch}
-                            placeholder="Buscar cidade..."
-                        />
-                    </div>
+                    <SearchBar
+                        value={search}
+                        onChange={setSearch}
+                        placeholder="Buscar cidade..."
+                    />
 
                     <div className={styles.buttons}>
-                        <Button onClick={openCreate}>Nova Cidade</Button>
-                        <Button variant="card" icon={<FontAwesomeIcon icon={faFilter} />}>
+                        <Button onClick={openCreate} icon={<FontAwesomeIcon icon={faAdd} />}>
+                            Nova Cidade
+                        </Button>
+
+                        <Button
+                            variant="card"
+                            icon={<FontAwesomeIcon icon={faFilter} />}
+                            onClick={() => setFiltersOpen(prev => !prev)}
+                        >
                             Filtros
                         </Button>
                     </div>
                 </section>
 
+                {filtersOpen && (
+                    <div className={styles.filtersPanel}>
+                        <Select
+                            label="Filtrar por país"
+                            value={filterCountryId ?? ""}
+                            onChange={(value) => setFilterCountryId(Number(value))}
+                            options={[
+                                { value: "", label: "Todos os países" },
+                                ...countries.map(c => ({ value: c.id, label: c.name })),
+                            ]}
+                        />
+
+                        <Button variant="card" onClick={() => setFilterCountryId(null)}>
+                            Limpar filtros
+                        </Button>
+                    </div>
+                )}
+
                 <section className={styles.tableWrapper}>
-                    <CitiesList
-                        data={currentItems}
-                        onRowClick={openView}
-                    />
+                    <CitiesList data={currentItems} onRowClick={openView} />
                 </section>
 
                 <div className={styles.paginationFixed}>
@@ -108,35 +129,29 @@ export const CitiesPage = () => {
                 </div>
             </section>
 
-            <Modal isOpen={modalOpen} onClose={closeModal} title="Dados da Cidade">
+            <Modal
+                isOpen={modalOpen}
+                onClose={closeModal}
+                title="Dados da Cidade"
+            >
                 <CityForm
-                    mode={formMode}
-                    defaultValues={
-                        selected
-                            ? {
-                                id: selected.id,
-                                name: selected.name,
-                                population: selected.population,
-                                latitude: selected.latitude,
-                                longitude: selected.longitude,
-                                country_id: selected.country_id || 0,
-                                country_name: selected.country_name,
-                                weather: selected.weather,
-                            }
-                            : undefined
-                    }
+                    mode={mode}
+                    defaultValues={selected}
                     countries={countries}
-                    onSubmit={async (data: City) => {
-                        await addCity(data)
-                        closeModal();
-                    }}
-                    onEditConfirm={async (city) => {
-                        await editCity(city);
-                        closeModal();
-                    }}
+                    onStartEdit={() => setMode("edit")}
                     onCancel={closeModal}
-                    onDelete={removeCity}
-                    onStartEdit={handleEdit}
+                    onSubmit={async (data) => {
+                        await addCity(data);
+                        closeModal();
+                    }}
+                    onEditConfirm={async (data) => {
+                        await editCity(data);
+                        closeModal();
+                    }}
+                    onDelete={async () => {
+                        await removeCity(selected.id);
+                        closeModal();
+                    }}
                 />
             </Modal>
         </Layout>

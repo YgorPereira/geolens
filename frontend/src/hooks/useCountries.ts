@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import type { Country } from "../features/Countries/countries.types"
 import { createCountry, listCountries, updateCountry, deleteCountry } from "../features/Countries/countries.api"
 import { append, removeById, updateById } from "../utils/arrayHelper"
+import { toast } from "sonner"
 
 export const useCountries = () => {
     const [countries, setCountries] = useState<Country[]>([])
@@ -39,6 +40,7 @@ export const useCountries = () => {
             };
 
             setCountries(prev => append(prev, normalized));
+            toast.success("País criado com sucesso.", { duration: 1500 })
             return normalized;
 
         } catch (error: any) {
@@ -56,6 +58,7 @@ export const useCountries = () => {
                 continent_name: updated.continent?.name || "",
             };
             setCountries(prev => updateById(prev, normalized));
+            toast.success("Continent editado com sucesso.", { duration: 1500 })
             return updated;
         } catch (error: any) {
             setError(error.message || "Error update a country")
@@ -67,6 +70,7 @@ export const useCountries = () => {
         try {
             const updated = await deleteCountry(id);
             setCountries(prev => removeById(prev, id))
+            toast.success("Continent removido com sucesso.", { duration: 1500 })
             return updated;
         } catch (error: any) {
             setError(error.message || "Error delete a country")

@@ -5,6 +5,8 @@ import { Input } from "../../../components/Input/Input";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import { Button } from "../../../components/Button/Button";
 import type { Continent } from "../continents.types";
+import { faPencil, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ContinentFormProps {
   mode: "create" | "view" | "edit";
@@ -82,10 +84,10 @@ export const ContinentForm = ({
       <div className={styles.actions}>
         {mode === "view" && (
           <>
-            <Button type="button" variant="blue" onClick={onStartEdit}>
+            <Button type="button" variant="blue" onClick={onStartEdit}  icon={<FontAwesomeIcon icon={faPencil}/>}>
               Editar
             </Button>
-            <Button type="button" variant="red" onClick={() => onDelete?.(defaultValues?.id!)}>
+            <Button type="button" variant="red" onClick={() => onDelete?.(defaultValues?.id!)}  icon={<FontAwesomeIcon icon={faTrash}/>}>
               Excluir
             </Button>
           </>
@@ -93,7 +95,7 @@ export const ContinentForm = ({
 
         {mode === "create" && (
           <>
-            <Button type="submit" variant="blue">
+            <Button type="submit"  icon={<FontAwesomeIcon icon={faSave}/>} variant="blue">
               Salvar
             </Button>
             <Button type="button" variant="card" onClick={onCancel}>

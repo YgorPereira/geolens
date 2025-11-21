@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import type { Continent } from "../features/Continents/continents.types"
 import { createContinent, deleteContinent, listContinents, updateContinent } from "../features/Continents/continents.api"
 import { append, removeById, updateById } from "../utils/arrayHelper"
@@ -31,6 +32,7 @@ export const useContinents = () => {
         try {
             const newOne = await createContinent(continent);
             setContinents(prev => append(prev, newOne));
+            toast.success("Continente criado com sucesso.", { duration: 1500 })
             return newOne;
         } catch (error: any) {
             setError(error.message || "Error create new continent")
@@ -42,6 +44,7 @@ export const useContinents = () => {
         try {
             const updated = await updateContinent(continent);
             setContinents(prev => updateById(prev, updated));
+            toast.success("Continente editado com sucesso.", { duration: 1500 })
             return updated;
         } catch (error: any) {
             setError(error.message || "Error update a continent")
@@ -53,6 +56,7 @@ export const useContinents = () => {
         try {
             const updated = await deleteContinent(id);
             setContinents(prev => removeById(prev, id))
+            toast.success("Continente removido com sucesso.", { duration: 1500 })
             return updated;
         } catch (error: any) {
             setError(error.message || "Error delete a continent")

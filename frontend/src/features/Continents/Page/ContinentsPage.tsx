@@ -7,7 +7,7 @@ import styles from "./ContinentsPage.module.css";
 
 import { Button } from "../../../components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faFilter } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 
 import { Modal } from "../../../components/Modal/Modal";
@@ -15,6 +15,7 @@ import { ContinentForm } from "../Forms/ContinentsForm";
 
 import type { Continent } from "../continents.types";
 import { useContinents } from "../../../hooks/useContinents";
+import { toast } from "sonner";
 
 export const ContinentsPage = () => {
     const itemsPerPage = 6;
@@ -68,6 +69,26 @@ export const ContinentsPage = () => {
         setFormMode("view");
     }
 
+    const confirmDelete = async (id: number) => {
+        toast.error(
+            "Excluir esse continent irá excluir países relacionados.",
+            {
+                description: "Deseja continuar?",
+                action: {
+                    label: "Excluir",
+                    onClick: () => {
+                        removeContinent(id)
+                            .then(() => closeModal())
+                            .catch(err => console.error(err));
+                    },
+                },
+                cancel: {
+                    label: "Cancelar",
+                }
+            }
+        );
+    };
+
     return (
         <Layout>
             <section className={styles.tableSection}>
@@ -83,9 +104,9 @@ export const ContinentsPage = () => {
                     </div>
 
                     <div className={styles.buttons}>
-                        <Button onClick={openCreate}>Novo Continente</Button>
+                        <Button onClick={openCreate}  icon={<FontAwesomeIcon icon={faAdd}/>}>Novo Continente</Button>
 
-                        <Button variant="card" icon={<FontAwesomeIcon icon={faFilter} />}>
+                        <Button variant="card" icon={<FontAwesomeIcon icon={faFilter} />} disabled>
                             Filtros
                         </Button>
                     </div>
@@ -125,10 +146,7 @@ export const ContinentsPage = () => {
                         await addContinent(data);
                         closeModal();
                     }}
-                    onDelete={async (id) => {
-                        await removeContinent(id);
-                        closeModal()
-                    }}
+                    onDelete={confirmDelete}
                     onConfirmEdit={async (data : Continent) => {
                         await editContinent(data);
                         closeModal();

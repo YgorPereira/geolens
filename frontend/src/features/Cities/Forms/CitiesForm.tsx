@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./CitiesForm.module.css";
 
 import { Input } from "../../../components/Input/Input";
@@ -7,6 +7,8 @@ import { Button } from "../../../components/Button/Button";
 import type { Country } from "../../Countries/countries.types";
 import type { City } from "../cities.types";
 import { getCityCoordinates } from "../../../utils/openMeteoGeocoding";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface CityFormProps {
     mode: "create" | "view" | "edit";
@@ -111,6 +113,12 @@ export const CityForm = ({
         });
     }
 
+    useEffect(() => {
+        if (mode === "create" && countries.length > 0 && countryId === 0) {
+            setCountryId(countries[0].id);
+        }
+    }, [mode, countries]);
+
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.fieldsWrapper}>
@@ -163,18 +171,13 @@ export const CityForm = ({
                 {mode === "view" && (
                     <>
                         {onStartEdit && (
-                            <Button type="button" variant="blue" onClick={onStartEdit}>
+                            <Button type="button" variant="blue" icon={<FontAwesomeIcon icon={faPencil} />} onClick={onStartEdit}>
                                 Editar
                             </Button>
                         )}
                         {onDelete && (
-                            <Button type="button" variant="card" onClick={() => onDelete(defaultValues.id)}>
+                            <Button type="button" variant="red" icon={<FontAwesomeIcon icon={faTrash} />} onClick={() => onDelete(defaultValues.id)}>
                                 Excluir
-                            </Button>
-                        )}
-                        {onCancel && (
-                            <Button type="button" variant="card" onClick={onCancel}>
-                                Fechar
                             </Button>
                         )}
                     </>
@@ -182,7 +185,7 @@ export const CityForm = ({
 
                 {mode === "create" && (
                     <>
-                        <Button type="submit" variant="blue">
+                        <Button type="submit" variant="blue" icon={<FontAwesomeIcon icon={faSave} />}>
                             Salvar
                         </Button>
                         {onCancel && (

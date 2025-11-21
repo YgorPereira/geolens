@@ -7,6 +7,8 @@ import { Button } from "../../../components/Button/Button";
 import type { Continent } from "../../Continents/continents.types";
 import type { Country } from "../countries.types";
 import { getCountryInfo } from "../../../utils/restCountries";
+import { faPencil, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface CountryFormProps {
     mode: "create" | "view" | "edit";
@@ -98,6 +100,12 @@ export const CountryForm = ({
         continent_id: continentId
     };
 
+    useEffect(() => {
+        if (mode === "create" && continents.length > 0 && continentId === 0) {
+            setContinentId(continents[0].id);
+        }
+    }, [mode, continents]);
+    
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Input
@@ -147,18 +155,13 @@ export const CountryForm = ({
                 {mode === "view" && (
                     <>
                         {onStartEdit && (
-                            <Button type="button" variant="blue" onClick={onStartEdit}>
+                            <Button type="button" variant="blue" icon={<FontAwesomeIcon icon={faPencil} />} onClick={onStartEdit}>
                                 Editar
                             </Button>
                         )}
                         {onDelete && (
-                            <Button type="button" variant="card" onClick={() => onDelete(defaultValues?.id)}>
+                            <Button type="button" variant="red" icon={<FontAwesomeIcon icon={faTrash} />} onClick={() => defaultValues?.id && onDelete(defaultValues.id)}>
                                 Excluir
-                            </Button>
-                        )}
-                        {onCancel && (
-                            <Button type="button" variant="card" onClick={onCancel}>
-                                Fechar
                             </Button>
                         )}
                     </>
@@ -166,7 +169,7 @@ export const CountryForm = ({
 
                 {mode === "create" && (
                     <>
-                        <Button type="submit" variant="blue">
+                        <Button type="submit" icon={<FontAwesomeIcon icon={faSave} />} variant="blue">
                             Salvar
                         </Button>
                         {onCancel && (
@@ -179,7 +182,7 @@ export const CountryForm = ({
 
                 {mode === "edit" && (
                     <>
-                        <Button type="submit" variant="blue" onClick={() => onEditConfirm(countryToUpdate)}>
+                        <Button type="button" variant="blue" onClick={() => onEditConfirm(countryToUpdate)}>
                             Atualizar
                         </Button>
                         {onCancel && (
