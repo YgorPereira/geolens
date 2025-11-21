@@ -2,12 +2,13 @@
   position: fixed;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 100%;
   width: 240px;
   background: var(--color-bg-card);
   color: var(--text);
   display: flex;
   flex-direction: column;
+  gap: 22rem;
   padding: 18px;
   box-shadow: 2px 0 8px rgba(0,0,0,0.25);
   z-index: 1000;
@@ -19,15 +20,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.05rem;
+  font-weight: var(--font-bold);
+  font-size: var(--heading-sm);
   letter-spacing: 0.6px;
-  color: var(--text);
+  color: var(--blue-primary);
   user-select: none;
+  gap: 0.5rem;
 }
 
-.top_buttons,
-.bottom_buttons{
+.top_buttons{
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -35,8 +36,9 @@
   font-weight: var(--font-medium);
 }
 
-.section_button{
+.section_button, .bottom_buttons{
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -55,7 +57,7 @@
   color: inherit;
   flex-shrink: 0;
 }
-
+.bottom_buttons:hover,
 .section_button:hover,
 .section_button:focus{
   background-color: rgba(255,255,255,0.06);
